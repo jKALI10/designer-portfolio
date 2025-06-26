@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ContactForm } from "@/components/contact-form";
+//import { ContactForm } from "@/components/contact-form";
 import {
   ArrowRight,
   Instagram,
@@ -416,7 +416,7 @@ export default function PortfolioPage() {
                   </Link>
                 </div> */}
               </div>
-              <div className="rounded-xl border bg-card text-card-foreground shadow p-6">
+              {/* <div className="rounded-xl border bg-card text-card-foreground shadow p-6">
                 <div className="flex flex-col space-y-1.5 pb-6">
                   <h3 className="font-semibold tracking-tight text-2xl">
                     Get in Touch
@@ -426,7 +426,7 @@ export default function PortfolioPage() {
                   </p>
                 </div>
                 <ContactForm />
-              </div>
+              </div> */}
             </div>
           </div>
         </section>
