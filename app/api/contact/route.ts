@@ -1,193 +1,96 @@
-"use client"
+import { type NextRequest, NextResponse } from "next/server";
+import { headers } from "next/headers";
+import { z } from "zod";
 
-import type React from "react"
+// Form validation schema
+const contactFormSchema = z.object({
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  email: z.string().email("Invalid email address"),
+  projectType: z.string().min(1, "Project type is required"),
+  message: z.string().min(10, "Message must be at least 10 characters"),
+  csrf: z.string(),
+});
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { useToast } from "@/hooks/use-toast"
+// Rate limiting map (in a real app, use Redis or similar)
+const ipRequestCounts = new Map<string, { count: number; timestamp: number }>();
 
-export function ContactForm() {
-  const { toast } = useToast()
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [csrfToken, setCsrfToken] = useState("")
+// Rate limit: 5 requests per minute
+const RATE_LIMIT = 5;
+const RATE_LIMIT_WINDOW_MS = 60 * 1000;
 
-  // Fetch CSRF token on component mount
-  useEffect(() => {
-    const fetchCsrfToken = async () => {
-      try {
-        console.log("Fetching CSRF token...")
-        const response = await fetch("/api/csrf")
-        if (response.ok) {
-          const data = await response.json()
-          const token = getCsrfTokenFromCookie()
-          console.log("CSRF token fetched:", token ? "✓" : "✗")
-          setCsrfToken(token)
-        }
-      } catch (error) {
-        console.error("Failed to fetch CSRF token:", error)
-      }
+export async function POST(request: NextRequest) {
+  try {
+    // 1. Get client IP for rate limiting
+    const ip = request.ip || "unknown";
+
+    // 2. Check rate limit
+    const now = Date.now();
+    const ipData = ipRequestCounts.get(ip) || { count: 0, timestamp: now };
+
+    // Reset count if outside window
+    if (now - ipData.timestamp > RATE_LIMIT_WINDOW_MS) {
+      ipData.count = 0;
+      ipData.timestamp = now;
     }
 
-    fetchCsrfToken()
-  }, [])
-
-  // Helper function to get CSRF token from cookie
-  const getCsrfTokenFromCookie = () => {
-    const cookies = document.cookie.split(";")
-    for (const cookie of cookies) {
-      const [name, value] = cookie.trim().split("=")
-      if (name === "csrf-token") {
-        return value
-      }
+    // Check if rate limited
+    if (ipData.count >= RATE_LIMIT) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429 }
+      );
     }
-    return ""
+
+    // Increment count
+    ipData.count++;
+    ipRequestCounts.set(ip, ipData);
+
+    // 3. Get form data
+    const formData = await request.formData();
+    const data = Object.fromEntries(formData.entries());
+
+    // 4. Validate CSRF token
+    const headersList = headers();
+    const csrfCookie = headersList.get("cookie")?.match(/csrf-token=([^;]+)/);
+    const csrfToken = csrfCookie?.[1];
+
+    if (!csrfToken || data.csrf !== csrfToken) {
+      return NextResponse.json(
+        { error: "Invalid CSRF token" },
+        { status: 403 }
+      );
+    }
+
+    // 5. Validate form data
+    const validatedData = contactFormSchema.safeParse(data);
+
+    if (!validatedData.success) {
+      return NextResponse.json(
+        { error: "Invalid form data", details: validatedData.error.format() },
+        { status: 400 }
+      );
+    }
+
+    // 6. Process the form data (in a real app, send email, save to database, etc.)
+    // This is a mock implementation
+    console.log("Form submission:", validatedData.data);
+
+    // Simulate processing delay
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // 7. Return success response
+    return NextResponse.json(
+      { success: true, message: "Message sent successfully!" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Contact form error:", error);
+
+    // Return error response
+    return NextResponse.json(
+      { error: "An unexpected error occurred" },
+      { status: 500 }
+    );
   }
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    console.log("Form submitted!")
-
-    if (isSubmitting) {
-      console.log("Already submitting, ignoring...")
-      return
-    }
-
-    setIsSubmitting(true)
-    console.log("Starting form submission...")
-
-    try {
-      const formData = new FormData(event.currentTarget)
-      formData.set("csrf", csrfToken)
-
-      console.log("Sending request to /api/contact...")
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        body: formData,
-        credentials: "include",
-      })
-
-      console.log("Response status:", response.status)
-      const data = await response.json()
-      console.log("Response data:", data)
-
-      if (response.ok) {
-        toast({
-          title: "Message sent!",
-          description: "Thank you for your message. I'll get back to you soon.",
-        })
-        event.currentTarget.reset()
-      } else {
-        toast({
-          title: "Error",
-          description: data.error || "Something went wrong. Please try again.",
-          variant: "destructive",
-        })
-      }
-    } catch (error) {
-      console.error("Form submission error:", error)
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive",
-      })
-    } finally {
-      setIsSubmitting(false)
-      console.log("Form submission completed")
-    }
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <label
-            htmlFor="first-name"
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          >
-            First name
-          </label>
-          <input
-            id="first-name"
-            name="firstName"
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-            placeholder="Enter your first name"
-            required
-          />
-        </div>
-        <div className="space-y-2">
-          <label
-            htmlFor="last-name"
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          >
-            Last name
-          </label>
-          <input
-            id="last-name"
-            name="lastName"
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-            placeholder="Enter your last name"
-            required
-          />
-        </div>
-      </div>
-      <div className="space-y-2">
-        <label
-          htmlFor="email"
-          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        >
-          Email
-        </label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-          placeholder="Enter your email"
-          required
-        />
-      </div>
-      <div className="space-y-2">
-        <label
-          htmlFor="project-type"
-          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        >
-          Project Type
-        </label>
-        <select
-          id="project-type"
-          name="projectType"
-          defaultValue=""
-          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-          required
-        >
-          <option value="" disabled>
-            Select project type
-          </option>
-          <option value="poster-design">Poster Design</option>
-          <option value="logo-design">Logo Design</option>
-          <option value="print">Print Design</option>
-          <option value="illustration">Illustration</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
-      <div className="space-y-2">
-        <label
-          htmlFor="message"
-          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        >
-          Message
-        </label>
-        <textarea
-          id="message"
-          name="message"
-          className="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-          placeholder="Tell me about your project..."
-          required
-        ></textarea>
-      </div>
-      <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
-        {isSubmitting ? "Sending..." : "Send Message"}
-      </Button>
-    </form>
-  )
 }
