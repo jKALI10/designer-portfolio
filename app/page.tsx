@@ -444,7 +444,7 @@ export default function PortfolioPage() {
               reserved.
             </p>
           </div>
-          <div className="flex gap-4">
+          {/* <div className="flex gap-4">
             <Link
               href="#"
               className="text-muted-foreground hover:text-foreground transition-colors"
@@ -473,7 +473,7 @@ export default function PortfolioPage() {
               <Dribbble className="h-5 w-5" />
               <span className="sr-only">Dribbble</span>
             </Link>
-          </div>
+          </div> */}
         </div>
       </footer>
     </div>
