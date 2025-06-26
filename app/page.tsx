@@ -188,6 +188,7 @@ export default function PortfolioPage() {
                   <h3 className="font-medium">Area of Interest</h3>
                   <div className="flex flex-wrap gap-2">
                     {[
+                      "Product Design",
                       "Poster Design",
                       "Logo Design",
                       "Typography",
