@@ -110,7 +110,8 @@ export default function PortfolioPage() {
                       MO-TIV Design Solutions
                     </h2>
                     <p className="text-muted-foreground">
-                      Poster Design • Illustration • Print • Logo Design
+                      Product Design • Poster Design • Illustration • Print •
+                      Logo Design
                     </p>
                   </div>
                 </div>
