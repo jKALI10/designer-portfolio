@@ -1,9 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { Resend } from "resend";
+//import { Resend } from "resend";
 
 // Initialize Resend
-const resend = new Resend(process.env.RESEND_API_KEY);
+//const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Form validation schema
 const contactFormSchema = z.object({
@@ -86,36 +86,36 @@ export async function POST(request: NextRequest) {
 
     // 6. Send email using Resend
     try {
-      await resend.emails.send({
-        from: process.env.FROM_EMAIL || "onboarding@resend.dev", //
-        to: process.env.RECIPIENT_EMAIL || "ermiasGD1010@gmail.com", //
-        subject: `New Contact Form Submission - ${validatedData.data.projectType}`,
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #333; border-bottom: 2px solid #8b5cf6; padding-bottom: 10px;">
-              New Contact Form Submission
-            </h2>
+      //await resend.emails.send({
+       // from: process.env.FROM_EMAIL || "onboarding@resend.dev", //
+        //to: process.env.RECIPIENT_EMAIL || "ermiasGD1010@gmail.com", //
+        //subject: `New Contact Form Submission - ${validatedData.data.projectType}`,
+        //html: `
+          //<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            //<h2 style="color: #333; border-bottom: 2px solid #8b5cf6; padding-bottom: 10px;">
+           //   New Contact Form Submission
+            //</h2>
             
-            <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <p><strong>Name:</strong> ${validatedData.data.firstName} ${validatedData.data.lastName}</p>
-              <p><strong>Email:</strong> <a href="mailto:${validatedData.data.email}">${validatedData.data.email}</a></p>
-              <p><strong>Project Type:</strong> ${validatedData.data.projectType}</p>
-            </div>
+            //<div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              //<p><strong>Name:</strong> ${validatedData.data.firstName} ${validatedData.data.lastName}</p>
+             // <p><strong>Email:</strong> <a href="mailto:${validatedData.data.email}">${validatedData.data.email}</a></p>
+              //<p><strong>Project Type:</strong> ${validatedData.data.projectType}</p>
+            //</div>
             
-            <div style="margin: 20px 0;">
-              <h3 style="color: #333;">Message:</h3>
-              <div style="background-color: #ffffff; padding: 15px; border-left: 4px solid #8b5cf6; border-radius: 4px;">
-                ${validatedData.data.message.replace(/\n/g, "<br>")}
-              </div>
-            </div>
+           // <div style="margin: 20px 0;">
+             // <h3 style="color: #333;">Message:</h3>
+              //<div style="background-color: #ffffff; padding: 15px; border-left: 4px solid #8b5cf6; border-radius: 4px;">
+               // ${validatedData.data.message.replace(/\n/g, "<br>")}
+              //</div>
+           // </div>
             
-            <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
-            <p style="color: #666; font-size: 12px; text-align: center;">
-              Sent from your portfolio contact form
-            </p>
-          </div>
-        `,
-      });
+            //<hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
+            //<p style="color: #666; font-size: 12px; text-align: center;">
+              //Sent from your portfolio contact form
+            //</p>
+          //</div>
+        //`,
+      //});
 
       console.log(
         "Email sent successfully via Resend to:",

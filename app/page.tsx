@@ -401,7 +401,7 @@ export default function PortfolioPage() {
                     <span className="sr-only">Twitter</span>
                   </Link>
                   <Link
-                    href="https://linkedin.com/in/ermias-nadew-899e"
+                    href="https://www.linkedin.com/in/edenn/"
                     className="rounded-full bg-muted p-2 hover:bg-muted/80 transition-colors"
                   >
                     <Linkedin className="h-5 w-5" />
