@@ -324,15 +324,15 @@ export default function PortfolioPage() {
                 <div className="inline-block rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground">
                   Contact
                 </div>
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
+                {/* <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
                   Let's create something amazing together
-                </h2>
-                <p className="text-muted-foreground">
+                </h2> */}
+                {/* <p className="text-muted-foreground">
                   I'm currently available for freelance projects,
                   collaborations, and consulting opportunities. If you have a
                   project in mind or just want to chat about design, I'd love to
                   hear from you.
-                </p>
+                </p> */}
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
