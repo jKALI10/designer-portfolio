@@ -177,16 +177,15 @@ export default function PortfolioPage() {
                 </h2>
                 <p className="text-muted-foreground"></p>
                 <p className="text-muted-foreground">
-                  With 3 years of experience in graphic design, I help
-                  individuals, startups, and businesses bring their brand
-                  stories to life through visuals, strategic design, and clean
-                  aesthetics, with creative execution, ensuring that every
-                  design not only looks beautiful but also achieves its intended
-                  purpose. I believe in the power of design to transform
-                  businesses and create meaningful connections with audiences.
+                  I’m passionate about graphic design and inspired by the power
+                  of visual storytelling. I enjoy creating thoughtful, clean,
+                  and impactful designs that communicate clearly and creatively.
+                  Whether it’s working on logos,Product design, layouts, or
+                  digital graphics, I’m always eager to challenge myself and
+                  improve my craft.
                 </p>
                 <div className="space-y-2">
-                  <h3 className="font-medium">Skills & Expertise</h3>
+                  <h3 className="font-medium">Area of Interest</h3>
                   <div className="flex flex-wrap gap-2">
                     {[
                       "Poster Design",
@@ -209,7 +208,7 @@ export default function PortfolioPage() {
           </div>
         </section>
 
-        {/* Services Section */}
+        {/* Services Section
         <section id="services" className="py-12 md:py-24 bg-muted/50">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
@@ -254,9 +253,9 @@ export default function PortfolioPage() {
               />
             </div>
           </div>
-        </section>
+        </section> */}
 
-        {/* Process Section */}
+        {/* Process Section
         <section className="py-12 md:py-24">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
@@ -314,7 +313,7 @@ export default function PortfolioPage() {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Contact Section */}
         <section id="contact" className="py-12 md:py-24">
