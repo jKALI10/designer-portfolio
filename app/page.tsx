@@ -385,7 +385,7 @@ export default function PortfolioPage() {
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-4">
+                {/* <div className="flex gap-4">
                   <Link
                     href="#"
                     className="rounded-full bg-muted p-2 hover:bg-muted/80 transition-colors"
@@ -414,7 +414,7 @@ export default function PortfolioPage() {
                     <Dribbble className="h-5 w-5" />
                     <span className="sr-only">Dribbble</span>
                   </Link>
-                </div>
+                </div> */}
               </div>
               <div className="rounded-xl border bg-card text-card-foreground shadow p-6">
                 <div className="flex flex-col space-y-1.5 pb-6">
