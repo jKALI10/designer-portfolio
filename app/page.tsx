@@ -82,7 +82,7 @@ export default function PortfolioPage() {
                   asChild
                   className="backdrop-blur-sm bg-primary/90"
                 >
-                  <Link href="/contact">
+                  <Link href="/#contact">
                     Let's Design <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
