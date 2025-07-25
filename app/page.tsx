@@ -351,7 +351,7 @@ export default function PortfolioPage() {
                     <div>
                       <p className="text-sm font-medium">Email</p>
                       <p className="text-sm text-muted-foreground">
-                        edenroba3@gmail.com
+                        ermiasGD1010@gmail.com
                       </p>
                     </div>
                   </div>
@@ -376,7 +376,7 @@ export default function PortfolioPage() {
                     <div>
                       <p className="text-sm font-medium">Location</p>
                       <p className="text-sm text-muted-foreground">
-                        Virginia, USA
+                        Addis Ababa, Ethiopia
                       </p>
                     </div>
                   </div>
