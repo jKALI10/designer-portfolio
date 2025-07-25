@@ -39,12 +39,7 @@ export default function PortfolioPage() {
             >
               About
             </Link>
-            <Link
-              href="#services"
-              className="text-sm font-medium hover:text-primary transition-colors"
-            >
-              Services
-            </Link>
+
             <Link
               href="#contact"
               className="text-sm font-medium hover:text-primary transition-colors"
